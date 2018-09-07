@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 import datetime
+import operator
 
 # Pretty
 # **********************************************
@@ -141,5 +142,17 @@ def expanding_daily_max(df,col_to_max):
         x = x.append(day[1].expanding().max())
     return x
 
-def drop_columns(df, colummns):
+def drop_columns(df, columns):
     return df.drop(columns, axis=1)
+
+def rename_columns(df, renames):
+    return df.rename(index=str, columns=renames)
+
+def lm(x):
+    return list(map(x))
+
+# Dictionaries
+# ************************************************
+
+def dict_argmax(d):
+    return max(d.items(), k=operator.itermgetter(1))[0]

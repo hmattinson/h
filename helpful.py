@@ -95,6 +95,36 @@ class bcolors:
 def bcolors_print(msg, bcolor):
     print(bcolor + msg + bcolors.ENDC)
 
+def two_dp_df(df, is_left):
+    for i in range(len(is_left)):
+        if not is_left[i]:
+            df[df.columns[i]] = df[df.columns[i]].round(2)
+    return df
+
+def fix_df_html(df, is_left):
+    if df is None:
+        return ''
+    df = two_dp_df(df, is_left)
+    cols = df.columns.size
+    rows = len(df)
+    html = df.to_html().split('\n')
+    indexes = sorted([5+i*(cols+3) for i in range(1,rows+1)] + [3], reverse=True)
+    for index in indexes:
+        del html[index]
+    for i in range(0,cols):
+        if is_left[i]:
+            html[3+i] = html[3+i].replace('<th>', '<th style="text-align: left;">')
+        else:
+            html[3+i] = html[3+i].replace('<th>', '<th style="text-align: right;">')
+    for i in range(cols):
+        if is_left[i]:
+            for index in [5+i+r*(cols+2) for r in range(1,rows+1)]:
+                html[index] = html[index].replace('<td>', '<td style="text-align: left;">')
+        else:
+            for index in [5+i+r*(cols+2) for r in range(1,rows+1)]:
+                html[index] = html[index].replace('<td>', '<td style="text-align: right;">')
+    return ('\n'.join(html))
+    
 # Maths
 # **********************************************
         
